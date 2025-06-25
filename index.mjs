@@ -43,8 +43,21 @@ function checkWebsiteWithProtocol(url, useHttps = true) {
             port: port,
             path: targetUrl.pathname + targetUrl.search,
             method: 'HEAD',
-            timeout: 10000,
-            rejectUnauthorized: false
+            timeout: 5000,
+            rejectUnauthorized: false,
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+                'Accept-Language': 'en-US,en;q=0.9',
+                'Accept-Encoding': 'gzip, deflate, br',
+                'DNT': '1',
+                'Connection': 'keep-alive',
+                'Upgrade-Insecure-Requests': '1',
+                'Sec-Fetch-Dest': 'document',
+                'Sec-Fetch-Mode': 'navigate',
+                'Sec-Fetch-Site': 'none',
+                'Cache-Control': 'max-age=0'
+            },
         };
 
         const req = module.request(options, (res) => {
@@ -94,9 +107,6 @@ async function processWebsitesInBatches(locations, batchSize = 10) {
         const batchResults = await Promise.all(batchPromises);
         results.push(...batchResults);
         
-        if (i + batchSize < locations.length) {
-            await new Promise(resolve => setTimeout(resolve, 1000));
-        }
     }
     
     return results;
@@ -111,7 +121,6 @@ export const handler = async (event) => {
         console.log("Fetching all locations from database...");
         const locations = await knex(DatabaseTableConstants.GMB_LOCATION_TABLE)
             .select('id', 'business_name', 'website_uri')
-            .limit(15)
             .whereNotNull('website_uri')
             .where('website_uri', '!=', '');
 
@@ -131,22 +140,22 @@ export const handler = async (event) => {
         console.log("Starting website checks...");
         const results = await processWebsitesInBatches(locations);
 
-        // console.log("Updating database with results...");
-        // let updatedCount = 0;
+        console.log("Updating database with results...");
+        let updatedCount = 0;
         
-        // for (const result of results) {
-        //     if (result.website_uri) {
-        //         await knex(DatabaseTableConstants.GMB_LOCATION_TABLE)
-        //             .where('id', result.id)
-        //             .update({
-        //                 is_website_uri_status_404: result.is_website_uri_status_404,
-        //                 is_website_uri_https_verified: result.is_website_uri_https_verified
-        //             });
-        //         updatedCount++;
+        for (const result of results) {
+            if (result.website_uri) {
+                await knex(DatabaseTableConstants.GMB_LOCATION_TABLE)
+                    .where('id', result.id)
+                    .update({
+                        is_website_uri_status_404: result.is_website_uri_status_404,
+                        is_website_uri_https_verified: result.is_website_uri_https_verified
+                    });
+                updatedCount++;
                 
-        //         console.log(`Updated ${result.business_name}: 404=${result.is_website_uri_status_404}, HTTPS=${result.is_website_uri_https_verified}`);
-        //     }
-        // }
+                console.log(`Updated ${result.business_name}: 404=${result.is_website_uri_status_404}, HTTPS=${result.is_website_uri_https_verified}`);
+            }
+        }
 
         const endTime = Date.now();
         const executionTime = endTime - startTime;
