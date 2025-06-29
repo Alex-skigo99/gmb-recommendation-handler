@@ -1,5 +1,6 @@
 import { fetchTextViaCheerio } from './fetchTextViaCheerio.js';
-import { findAddressInText } from './findAddressInText.js';
+import { findTextWithoutAi } from './findTextWithoutAi.js';
+import { findUsingAi } from './findUsingAi.js';
 
 export const checkAddressesForLocations = async (locations) => {
   const results = [];
@@ -28,15 +29,15 @@ export const checkAddressesForLocations = async (locations) => {
         continue;
       }
 
-      const result = findAddressInText(location, websiteText);
+      // const result = findTextWithoutAi(location, websiteText);
+
+      const result = await findUsingAi(location, websiteText);
 
       results.push({
         id: location.id,
         business_name: location.business_name,
         ...result
       });
-
-      // await new Promise(resolve => setTimeout(resolve, 1000));
       
     } catch (error) {
       console.error(`Error processing location ${location.id}:`, error);

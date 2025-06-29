@@ -10,7 +10,7 @@ const variantsOfAddress = (address) => {
     return [address, upper, lower, capitalized];
 };
 
-export const findAddressInText = (location, websiteText) => {
+export const findTextWithoutAi = (location, websiteText) => {
     
     if (!websiteText || !location) {
       return {
