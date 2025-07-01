@@ -36,7 +36,6 @@ export async function findUsingAi(location, websiteText) {
 
   let content = response.choices[0].message.content;
 
-  // Strip triple backticks if present
   content = content.replace(/```json\s*([\s\S]*?)\s*```/, '$1').trim();
 
   try {
@@ -44,8 +43,14 @@ export async function findUsingAi(location, websiteText) {
   } catch (e) {
     console.error("Failed to parse GPT response:", content);
     return {
-      isKeywordStuffed: null,
-      notes: "Could not determine from GPT",
+      address: {
+        isMatch: false,
+        error: "Failed to parse GPT response",
+      },
+      hours: {
+        isMatch: false,
+        error: "Failed to parse GPT response",
+      },
     };
   }
 }

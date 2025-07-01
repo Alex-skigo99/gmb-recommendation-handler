@@ -2,6 +2,7 @@ import knex from "/opt/nodejs/db.js";
 import DatabaseTableConstants from "/opt/nodejs/DatabaseTableConstants.js";
 import { bulkUpdateInChunks, prepareUpdatesFromResults } from './utils/bulkUpdate.js';
 import { processWebsitesInBatches } from './utils/checkWebsites.js';
+import { checkAddressesForLocations } from './utils/checkAddressesForLocations.js';
 
 export const handler = async (event) => {
     console.log("Starting Lambda function to check websites for all GMBs");
@@ -13,6 +14,7 @@ export const handler = async (event) => {
         const locations = await knex(DatabaseTableConstants.GMB_LOCATION_TABLE)
             .select('id', 'business_name', 'website_uri', 'address_lines', 'locality', 'administrative_area', 'postal_code', 'regular_hours')
             .whereNotNull('website_uri')
+            .limit(10) // For testing, limit to 10 locations
             .where('website_uri', '!=', '');
 
         console.log(`Found ${locations.length} locations with website URIs`);
@@ -47,6 +49,8 @@ export const handler = async (event) => {
         console.log("Updating database with results...");
         
         const updates = prepareUpdatesFromResults(results);
+        
+        console.log('updates', updates)
         
         const updatedCount = await bulkUpdateInChunks(
             DatabaseTableConstants.GMB_LOCATION_TABLE, 
