@@ -7,6 +7,8 @@ import { checkAddressesForLocations } from './utils/checkAddressesForLocations.j
 export const handler = async (event) => {
     console.log("Starting Lambda function to check websites for all GMBs");
     console.log("Event: ", JSON.stringify(event, null, 2));
+    const { limit = 10, offset = 0 } = JSON.parse(event);
+    console.log(`Limit: ${limit}, Offset: ${offset}`);
     const startTime = Date.now();
     
     try {
@@ -14,7 +16,9 @@ export const handler = async (event) => {
         const locations = await knex(DatabaseTableConstants.GMB_LOCATION_TABLE)
             .select('id', 'business_name', 'website_uri', 'address_lines', 'locality', 'administrative_area', 'postal_code', 'regular_hours')
             .whereNotNull('website_uri')
-            .limit(10) // For testing, limit to 10 locations
+            .limit(Number(limit) || 10)
+            .offset(Number(offset) || 0)
+            .orderBy('id', 'asc')
             .where('website_uri', '!=', '');
 
         console.log(`Found ${locations.length} locations with website URIs`);
