@@ -7,7 +7,7 @@ import { checkAddressesForLocations } from './utils/checkAddressesForLocations.j
 export const handler = async (event) => {
     console.log("Starting Lambda function to check websites for all GMBs");
     console.log("Event: ", JSON.stringify(event, null, 2));
-    const { limit = 10, offset = 0 } = JSON.parse(event);
+    const { limit = 10, offset = 0 } = event;
     console.log(`Limit: ${limit}, Offset: ${offset}`);
     const startTime = Date.now();
     

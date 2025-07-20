@@ -1,6 +1,7 @@
 import knex from "/opt/nodejs/db.js";
 
 export const bulkUpdateInChunks = async (tableName, updates, chunkSize = 100) => {
+    return;
     if (!updates || updates.length === 0) return 0;
 
     let totalUpdated = 0;
@@ -30,7 +31,9 @@ export const prepareUpdatesFromResults = (results) => {
             id: result.id,
             is_website_uri_status_404: result.is_website_uri_status_404,
             is_website_uri_https_verified: result.is_website_uri_https_verified,
-            does_address_match_website: result.address?.isMatch || false,
-            do_hours_match_website: result.hours?.isMatch || false,
+            does_address_match_website: result.address?.isMatch,
+            do_hours_match_website: result.hours?.isMatch,
+            is_address_on_website: result.address?.isFound,
+            is_hours_on_website: result.hours?.isFound,
         }));
 };

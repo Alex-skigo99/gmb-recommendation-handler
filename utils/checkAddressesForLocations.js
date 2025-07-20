@@ -7,7 +7,14 @@ const processLocationAddress = async (location) => {
     return {
       id: location.id,
       business_name: location.business_name,
-      isMatch: false,
+      address: {
+        isMatch: false,
+        isFound: false,
+      },
+      hours: {
+        isMatch: false,
+        isFound: false,
+      },
       error: 'No website URL available'
     };
   }
@@ -21,8 +28,15 @@ const processLocationAddress = async (location) => {
       return {
         id: location.id,
         business_name: location.business_name,
-        isMatch: false,
-        error: 'No website text available'
+        address: {
+          isMatch: null,
+          isFound: null,
+        },
+        hours: {
+          isMatch: null,
+          isFound: null,
+        },
+        error: "Failed to parse GPT response",
       };
     }
 
@@ -40,7 +54,14 @@ const processLocationAddress = async (location) => {
     return {
       id: location.id,
       business_name: location.business_name,
-      isMatch: false,
+      address: {
+        isMatch: null,
+        isFound: null,
+      },
+      hours: {
+        isMatch: null,
+        isFound: null,
+      },
       error: error.message
     };
   }
@@ -115,7 +136,14 @@ export const checkAddressesForLocations = async (locations, options = {}) => {
         allResults.push({
           id: location.id,
           business_name: location.business_name,
-          isMatch: false,
+          address: {
+            isMatch: null,
+            isFound: null,
+          },
+          hours: {
+            isMatch: null,
+            isFound: null,
+          },
           error: `Chunk processing failed: ${error.message}`
         });
       });
