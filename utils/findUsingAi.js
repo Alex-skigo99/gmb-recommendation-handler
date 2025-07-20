@@ -16,8 +16,9 @@ export async function findUsingAi(location, websiteText) {
    If the any address is found return isFound as true. If the address is found and matches the provided address, return isMatch as true.
    If the no address is found, return isFound as false and isMatch as false.
    If the any working hours are found return isFound as true. If the hours are found and match the provided hours, return isMatch as true.
-    If the no working hours are found, return isFound as false and isMatch as false.
-    The working hours format is [{ "openDay": "Monday", "openTime": {"hours": "9", "minutes": "0"}, "closeDay": "Monday", "closeTime": {"hours": "17", "minutes": "0"} }, ...].
+  If the no working hours are found, return isFound as false and isMatch as false.
+  The working hours format is [{ "openDay": "Monday", "openTime": {"hours": "9", "minutes": "0"}, "closeDay": "Monday", "closeTime": {"hours": "17", "minutes": "0"} }, ...].
+  For 24 working hours, use {"openDay": "day of the week", "openTime": {}, "closeDay": "day of the week", "closeTime": {"hours": "24"} }.
    The working hours are: ${JSON.stringify(location.regular_hours.periods)}.
     Respond in JSON format like: {"address": {"isFound": true/false, "isMatch": true/false}, "hours": {"isFound": true/false, "isMatch": true/false}, "error": "error message" }.
    Here is the website text: "${websiteText}"`;
