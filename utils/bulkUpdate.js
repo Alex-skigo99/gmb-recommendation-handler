@@ -35,5 +35,7 @@ export const prepareUpdatesFromResults = (results) => {
             do_hours_match_website: result.hours?.isMatch,
             is_address_on_website: result.address?.isFound,
             is_hours_on_website: result.hours?.isFound,
+            is_phone_on_website: result.phone?.isFound,
+            does_phone_match_website: result.phone?.isMatch,
         }));
 };

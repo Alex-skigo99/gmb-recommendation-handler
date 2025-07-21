@@ -15,6 +15,10 @@ const processLocationAddress = async (location) => {
         isMatch: false,
         isFound: false,
       },
+      phone: {
+        isMatch: null,
+        isFound: null,
+      },
       error: 'No website URL available'
     };
   }
@@ -33,6 +37,10 @@ const processLocationAddress = async (location) => {
           isFound: null,
         },
         hours: {
+          isMatch: null,
+          isFound: null,
+        },
+        phone: {
           isMatch: null,
           isFound: null,
         },
@@ -59,6 +67,10 @@ const processLocationAddress = async (location) => {
         isFound: null,
       },
       hours: {
+        isMatch: null,
+        isFound: null,
+      },
+      phone: {
         isMatch: null,
         isFound: null,
       },
@@ -141,6 +153,10 @@ export const checkAddressesForLocations = async (locations, options = {}) => {
             isFound: null,
           },
           hours: {
+            isMatch: null,
+            isFound: null,
+          },
+          phone: {
             isMatch: null,
             isFound: null,
           },
