@@ -1,7 +1,6 @@
 import knex from "/opt/nodejs/db.js";
 
 export const bulkUpdateInChunks = async (tableName, updates, chunkSize = 100) => {
-    return;
     if (!updates || updates.length === 0) return 0;
 
     let totalUpdated = 0;
